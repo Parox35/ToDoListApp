@@ -1,0 +1,15 @@
+
+extends layout 
+
+block content 
+    h1 Se connecter
+    form(action='/auth/signin' method='POST')
+        label(for='email') Email :
+        input(type='email' id='email' name='email' required)
+        br
+        label(for='password') Mot de passe :
+        input(type='password' id='password' name='password' required)
+        br
+        button(type='submit') Se connecter
+    if messageErreur
+        p= messageErreur
