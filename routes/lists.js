@@ -38,8 +38,14 @@ router.get('/new', (req, res) => {
 
 router.post('/new', async (req, res) => {
     try {
-        await List.create({ name: req.body.name, userId: req.user.id });
-        res.redirect('acceuil.pug');
+        await List.create({ name: req.body.name });
+
+        const user = await User.findOne({where:{ id: req.session.userId} });
+        const list = await List.findOne({ where: { name: req.body.name } });
+
+        await user.addList(list);
+
+        res.redirect('/');
     }
     catch (err) {
         console.error(err);
@@ -51,7 +57,7 @@ router.post('/new', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         await List.update({ name: req.body.name }, { where: { id: req.params.id } });
-        res.redirect('/lists');
+        res.redirect('/');
     }
     catch (err) {
         console.error(err);
@@ -60,10 +66,10 @@ router.patch('/:id', async (req, res) => {
 });
 
 // Suppression d'une liste
-router.get('/:id/delete', async (req, res) => {
+router.delete('/:id/delete', async (req, res) => {
     try {
         await List.destroy({ where: { id: req.params.id } });
-        res.render('/lists');
+        res.render('accueil.pug');
     }
     catch (err) {
         console.error(err);
@@ -91,7 +97,7 @@ router.post('/:id/add_users', async (req, res) => {
 // Récupérer une liste avec ces taches
 router.get('/:id', async (req, res) => {
     try {
-        const list = await Task.findAll(where({ listId: req.params.id }));
+        const list = await Task.findAll(({where: { listId: req.params.id }}));
         res.render('lists', { title: list.name, list });
     }
     catch (err) {
