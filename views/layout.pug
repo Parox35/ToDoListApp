@@ -5,15 +5,20 @@ html(lang='en')
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width, initial-scale=1')
         link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous")
-        link(rel='stylesheet' href='/css/style.css')
+        link(rel='stylesheet' href='../css/style.css')
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css")
     body
         div.container-fluid
-            div.row
-                nav.col-sm-2.sidebar-nav
-                    a.nav-link(href='/') Accueil
+            div.row-sm
+                nav.col.navbar.bg-info
+                    a.nav-link(href='/').text-dark Accueil
                     hr
-                    a.nav-link(href='/sign_out') Sign out
+                    p Bienvenue User
+                    hr
+                    a.nav-link(href='/login').text-dark Sign out
 
-                div.col-sm-10
-                    h1= title
-                    block content
+        div.col-md.bg-light
+            h1= title
+            block content
+        footer.container-fluid.mt-3
+            p.text-center.bg-info.p-3 &copy; 2025 - My To do List App
