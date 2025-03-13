@@ -6,11 +6,40 @@ block content
             div.grid-item.bg-light.course-item
                 i.bi.bi-arrows-move
                 p= list.name
-                a(href=`lists/${list.id}/edit`)
+                button(onclick=`renameList(${list.id})`) 
                     i.bi.bi-pencil-square
-                a(href=`lists/${list.id}/delete`)
+                button(onclick=`deleteList(${list.id})`) 
                     i.bi.bi-trash3
 
         else
             p Vous n'avez pas encore de listes.
         a.btn.btn-primary(href="/new") Create a new list
+
+
+    script.
+        async function renameList(listId) {
+            const newTitle = prompt('Nouveau titre pour la liste :');
+            if (newTitle) {
+                try {
+                    await fetch(`/${listId}`, {  
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: newTitle })
+                    });
+                    location.reload();
+                } catch (error) {
+                    console.error('Error renaming list:', error);
+                }
+            }
+        }
+
+        async function deleteList(listId) {
+            if (confirm('Voulez-vous vraiment supprimer cette tâche ?')) {
+                try {
+                    await fetch(`/${listId}/delete`, { method: 'DELETE' });
+                    location.reload();
+                } catch (error) {
+                    console.error('Error deleting list:', error);
+                }
+            }
+        }
