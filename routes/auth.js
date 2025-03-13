@@ -56,7 +56,6 @@ router.post('/signin', async (req, res) => {
   try {
     // Récupérer l'utilisateur dans la base de données
     const user = await User.findOne({ where: { email } });
-    console.log(user);
 
     if (!user || !(await bcrypt.compare(password, user.dataValues.password))) {
       return res.status(400).render('signin.pug', { title: 'Connexion', messageErreur: 'Email ou mot de passe incorrect.' });

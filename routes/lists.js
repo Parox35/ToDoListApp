@@ -13,7 +13,7 @@ const Task = require('../models/Task');
 //  Récupérer toutes les listes
 router.get('/', async (req, res) => {
     try {
-        const lists = await List.findAll(where({ userId: req.headers.id }));
+        const lists = await List.findAll(where({ userId: req.session.userId }));
         res.render('accueil.pug', { title: 'Listes', lists });
     }
     catch (err) {
