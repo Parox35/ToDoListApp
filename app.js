@@ -11,8 +11,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const authRouter = require(path.join(__dirname, "routes/auth.js"));
+const listsRouter = require(path.join(__dirname, "routes/lists.js"));
+
 // Routes
-app.use('/auth', require('./routes/auth'));
-app.use('/lists', require('./routes/lists'));
+app.use('/auth', authRouter);
+app.use('/', listsRouter);
 
 module.exports = app;
