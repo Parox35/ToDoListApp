@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const List = require('../models/List');
+const User = require('../models/User');
+
 const { where } = require('sequelize');
 const Task = require('../models/Task');
 
@@ -13,7 +15,8 @@ const Task = require('../models/Task');
 //  Récupérer toutes les listes
 router.get('/', async (req, res) => {
     try {
-        const lists = await List.findAll(where({ userId: req.session.userId }));
+        const user = await User.findOne({where:{ id: req.session.userId} });
+        const lists = await user.getLists();
         res.render('accueil.pug', { title: 'Listes', lists });
     }
     catch (err) {
