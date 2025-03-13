@@ -7,6 +7,16 @@ const bodyParser = require('body-parser');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+const session = require('express-session');
+
+app.use(session({
+    secret: 'secret', // Clé secrète pour signer le cookie de session
+    resave: false, // Ne pas enregistrer la session si elle n'est pas modifiée
+    saveUninitialized: true, // Enregistrer les sessions non initialisées
+    userId: null,
+}));
+
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
