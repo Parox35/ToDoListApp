@@ -1,0 +1,21 @@
+.course-item {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.course-item i, .course-item p, .course-item a {
+  margin-right: 8px;
+}
+
+.course-item a {
+  text-decoration: none; /* Supprime le soulignement des liens */
+  color: inherit; /* Hérite de la couleur du texte parent */
+}
+
+.btn-primary {
+  margin-left: 16px;
+}
+  

@@ -1,4 +1,16 @@
 extends layout 
 
 block content
-    p Welcome to #{title}
+    div.grid-container
+        each list in lists
+            div.grid-item.bg-light.course-item
+                i.bi.bi-arrows-move
+                p= list.name
+                a(href=`lists/${list.id}/edit`)
+                    i.bi.bi-pencil-square
+                a(href=`lists/${list.id}/delete`)
+                    i.bi.bi-trash3
+
+        else
+            p Vous n'avez pas encore de listes.
+        a.btn.btn-primary(href="/new") Create a new list
