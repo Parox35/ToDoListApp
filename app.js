@@ -20,6 +20,7 @@ app.use(session({
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 const authRouter = require(path.join(__dirname, "routes/auth.js"));
 const listsRouter = require(path.join(__dirname, "routes/lists.js"));

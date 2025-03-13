@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     try {
         const user = await User.findOne({where:{ id: req.session.userId} });
         const lists = await user.getLists();
-        res.render('accueil.pug', { title: 'Listes', lists });
+        res.render('accueil', { title: 'Listes', lists });
     }
     catch (err) {
         console.error(err);
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 // Ajout d'une nouvelle liste
 router.get('/new', (req, res) => {
     try{
-        res.render('new_list.pug', { title: 'Nouvelle liste' });
+        res.render('new_list', { title: 'Nouvelle liste' });
     }
     catch (err) {
         console.error(err);
@@ -69,7 +69,7 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id/delete', async (req, res) => {
     try {
         await List.destroy({ where: { id: req.params.id } });
-        res.render('accueil.pug');
+        res.render('accueil');
     }
     catch (err) {
         console.error(err);
