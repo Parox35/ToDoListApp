@@ -78,14 +78,19 @@ router.delete('/:id/delete', async (req, res) => {
 });
 
 // Ajout d'un utilisateur à une liste
-router.post('/:id/add_users', async (req, res) => {
+router.post('/:idListe/users', async (req, res) => {
     try {
-        await List.addUser(req.params.id, req.body.email);
-        res.redirect(`/lists/${req.params.id}`);
+        const user = await User.findOne({ where: { email: req.body.email } });
+        if (user==null) {
+            res.redirect(`/${req.params.idListe}`);
+            return;
+        }
+        await List.addUser(user.id, req.params.idListe);
+        res.redirect(`/${req.params.id}`);
     }
     catch (err) {
         console.error(err);
-        res.status(500).send('Erreur lors de l\'ajout de l\'utilisateur');
+        res.status(500).send("Erreur lors de l'ajout de l'utilisateur");
     }
 });
 
@@ -98,7 +103,7 @@ router.post('/:id/add_users', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const list = await List.findOne(({where: { id: req.params.id }}));
-        res.render('list', { list, tasks: await list.getTasks() });
+        res.render('list', { title: list.name, list, tasks: await list.getTasks() });
     }
     catch (err) {
         console.error(err);
@@ -139,30 +144,6 @@ router.delete('/:id/tasks/:taskId', async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).send('Erreur lors de la suppression de la tâche');
-    }
-});
-
-//Tache complete
-router.patch('/:id/tasks/:taskId/complete', async (req, res) => {
-    try {
-        await Task.update({ completed: true }, { where: { id: req.params.taskId } });
-        res.redirect(`/${req.params.id}`);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur lors de la modification de la tâche');
-    }
-});
-
-//Tache incomplete
-router.patch('/:id/tasks/:taskId/incomplete', async (req, res) => {
-    try {
-        await Task.update({ completed: false }, { where: { id: req.params.taskId } });
-        res.redirect(`/${req.params.id}`);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur lors de la modification de la tâche');
     }
 });
 

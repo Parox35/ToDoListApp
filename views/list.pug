@@ -1,7 +1,6 @@
 extends layout
 
 block content
-  h1= list.name
   ul#task-list
     each task in tasks
       li
@@ -19,6 +18,12 @@ block content
     label(for='date') Date :
     input(type='date' id='date' name='date')
     button(type='submit') Ajouter
+
+  h2 Ajouter un utilisateur à la liste
+  form(action=`/${list.id}/users` method='POST')
+    label(for='email') Email de l'utilisateur :
+    input(type='email' id='email' name='email' required)
+    button(type='submit') Ajouter l'utilisateur
 
   // Modal for renaming task
   div#renameModal(style='display:none;')
