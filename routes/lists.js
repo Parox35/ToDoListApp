@@ -98,7 +98,6 @@ router.post('/:id/add_users', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const list = await List.findOne(({where: { id: req.params.id }}));
-        console.log(await list.getTasks() );
         res.render('list', { list, tasks: await list.getTasks() });
     }
     catch (err) {
@@ -122,7 +121,7 @@ router.post('/:id/tasks', async (req, res) => {
 // Modification d'une tâche
 router.patch('/:id/tasks/:taskId', async (req, res) => {
     try {
-        await Task.update({ name: req.body.name }, { where: { id: req.params.taskId } });
+        await Task.update({ title: req.body.title, date: req.body.date }, { where: { id: req.params.taskId } });
         res.redirect(`/${req.params.id}`);
     }
     catch (err) {
