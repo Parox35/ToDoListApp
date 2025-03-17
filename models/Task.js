@@ -19,6 +19,11 @@ const Task = sequelize.define('Task', {
       key: 'id',
     },
   },
+  date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  }
 });
 
 // Définir l'association
