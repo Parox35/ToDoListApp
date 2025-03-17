@@ -81,11 +81,12 @@ router.delete('/:id/delete', async (req, res) => {
 router.post('/:idListe/users', async (req, res) => {
     try {
         const user = await User.findOne({ where: { email: req.body.email } });
+        const list = await List.findOne({ where: { id: req.params.idListe } });
         if (user==null) {
             res.redirect(`/${req.params.idListe}`);
             return;
         }
-        await List.addUser(user.id, req.params.idListe);
+        await user.addList(list);
         res.redirect(`/${req.params.id}`);
     }
     catch (err) {
