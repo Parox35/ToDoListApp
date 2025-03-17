@@ -1,0 +1,42 @@
+extends layout 
+
+block content
+    h1= list.name
+    ul#task-list
+      each task in tasks
+        li
+          input(type='checkbox', checked=task.completed)
+          span(class=task.completed ? 'completed' : '')= task.title
+          button(onclick='renameTask(#{task.id})') 
+            i.bi.bi-pencil-square
+          button(onclick='deleteTask(#{task.id})') 
+            i.bi.bi-trash3
+    h2 Ajouter une nouvelle tâche
+    form(action=`/${list.id}/tasks` method='POST')
+      label(for='title') Titre :
+      input(type='text' id='title' name='title' required)
+      label(for='date') Date :
+      input(type='date' id='date' name='date')
+      button(type='submit') Ajouter
+
+    script.
+      function renameTask(taskId) {
+        const newTitle = prompt('Nouveau titre pour la tâche :');
+        if (newTitle) {
+          fetch(`/${list.id}/tasks/${taskId}/rename`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: newTitle }),
+          }).then(() => location.reload());
+        }
+      }
+
+      function deleteTask(taskId) {
+        if (confirm('Voulez-vous vraiment supprimer cette tâche ?')) {
+          fetch(`/${list.id}/tasks/${taskId}/delete`, {
+            method: 'DELETE',
+          }).then(() => location.reload());
+        }
+      }

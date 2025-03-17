@@ -94,11 +94,11 @@ router.post('/:id/add_users', async (req, res) => {
 |                                 Taches                                  |
 |--------------------------------------------------------------------------
 */
-// Récupérer une liste avec ces taches
+// Récupérer une liste avec ses taches
 router.get('/:id', async (req, res) => {
     try {
-        const list = await Task.findAll(({where: { listId: req.params.id }}));
-        res.render('lists', { title: list.name, list });
+        const list = await List.findOne(({where: { id: req.params.id }}));
+        res.render('list', { list, tasks: await list.getTasks() });
     }
     catch (err) {
         console.error(err);
