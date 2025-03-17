@@ -4,12 +4,13 @@ block content
     div.grid-container
         each list in lists
             div.grid-item.bg-light.course-item
-                i.bi.bi-arrows-move
-                p= list.name
-                button(onclick=`renameList(${list.id})`) 
-                    i.bi.bi-pencil-square
-                button(onclick=`deleteList(${list.id})`) 
-                    i.bi.bi-trash3
+                i.bi.bi-list-task
+                a(href=`${list.id}`) 
+                    p= list.name
+                i(onclick=`renameList(${list.id})`).bi.bi-pencil-square.btn
+                    
+                i(onclick=`deleteList(${list.id})`).bi.bi-trash3.btn
+                    
 
         else
             p Vous n'avez pas encore de listes.
