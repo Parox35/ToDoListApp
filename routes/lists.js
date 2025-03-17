@@ -87,7 +87,7 @@ router.post('/:idListe/users', async (req, res) => {
             return;
         }
         await user.addList(list);
-        res.redirect(`/${req.params.id}`);
+        res.redirect(`/${req.params.idListe}`);
     }
     catch (err) {
         console.error(err);
