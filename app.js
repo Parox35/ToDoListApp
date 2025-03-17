@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
+require("dotenv").config();
 
 // Configuration de Pug
 app.set('view engine', 'pug');
@@ -24,8 +25,10 @@ app.use(express.json());
 
 const authRouter = require(path.join(__dirname, "routes/auth.js"));
 const listsRouter = require(path.join(__dirname, "routes/lists.js"));
+const passwordResetRouter = require(path.join(__dirname, "routes/passwordReset.js"));
 
 // Routes
+app.use('/passwordReset', passwordResetRouter);
 app.use('/auth', authRouter);
 app.use('/', listsRouter);
 
