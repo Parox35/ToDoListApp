@@ -3,6 +3,8 @@ const router = express.Router();
 const List = require('../models/List');
 const User = require('../models/User');
 
+const sendEmail = require('../utils/sendEmail');
+
 const { where } = require('sequelize');
 const Task = require('../models/Task');
 
@@ -87,6 +89,15 @@ router.post('/:idListe/users', async (req, res) => {
             return;
         }
         await user.addList(list);
+
+        const bodyEmail = 
+            `<div>
+            <p>Hello,</p>
+            <p>You have been added to the list : ${list.name}</p>
+            </div>`;
+
+        sendEmail(user.email, "Ajouté a une liste à faire", bodyEmail);
+
         res.redirect(`/${req.params.idListe}`);
     }
     catch (err) {
