@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
     }
     catch (err) {
         console.error(err);
-        res.status(500).send('Erreur lors de la récupération des listes');
+        res.redirect('/auth/signin');
     }
 });
 

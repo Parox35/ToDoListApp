@@ -1,17 +1,17 @@
 # Utiliser une image de base officielle Node.js
-FROM node:14
+FROM node:20
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /usr/src/app
 
-# Copier le fichier package.json et package-lock.json
-COPY package*.json ./
+# Copier le code source de l'application
+COPY . .
+
+# Installer les dépendances de construction pour les modules natifs
+RUN apt-get update && apt-get install -y python3 make g++
 
 # Installer les dépendances de l'application
 RUN npm install
-
-# Copier le reste du code source de l'application
-COPY . .
 
 # Exposer le port sur lequel l'application va tourner
 EXPOSE 3000
