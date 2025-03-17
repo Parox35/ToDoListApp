@@ -78,27 +78,32 @@ router.delete('/:id/delete', async (req, res) => {
 });
 
 // Ajout d'un utilisateur à une liste
-router.post('/:id/add_users', async (req, res) => {
+router.post('/:idListe/users', async (req, res) => {
     try {
-        await List.addUser(req.params.id, req.body.email);
-        res.redirect(`/lists/${req.params.id}`);
+        const user = await User.findOne({ where: { email: req.body.email } });
+        if (user==null) {
+            res.redirect(`/${req.params.idListe}`);
+            return;
+        }
+        await List.addUser(user.id, req.params.idListe);
+        res.redirect(`/${req.params.id}`);
     }
     catch (err) {
         console.error(err);
-        res.status(500).send('Erreur lors de l\'ajout de l\'utilisateur');
+        res.status(500).send("Erreur lors de l'ajout de l'utilisateur");
     }
 });
 
 /*
 |--------------------------------------------------------------------------
-|                                 Taches                                  |
+|                                 Tâches                                  |
 |--------------------------------------------------------------------------
 */
-// Récupérer une liste avec ces taches
+// Récupérer une liste avec ses tâches
 router.get('/:id', async (req, res) => {
     try {
-        const list = await Task.findAll(({where: { listId: req.params.id }}));
-        res.render('lists', { title: list.name, list });
+        const list = await List.findOne(({where: { id: req.params.id }}));
+        res.render('list', { title: list.name, list, tasks: await list.getTasks() });
     }
     catch (err) {
         console.error(err);
@@ -106,23 +111,23 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Ajout d'une tache à une liste
+// Ajout d'une tâche à une liste
 router.post('/:id/tasks', async (req, res) => {
     try {
-        await Task.create({ name: req.body.name, listId: req.params.id });
-        res.redirect(`/lists/${req.params.id}`);
+        await Task.create({ title: req.body.title, listId: req.params.id , completed: false, date: req.body.date});
+        res.redirect(`/${req.params.id}`);
     }
     catch (err) {
         console.error(err);
-        res.status(500).send('Erreur lors de l\'ajout de la tâche');
+        res.status(500).send("Erreur lors de l'ajout de la tâche");
     }
 });
 
-// Modification d'une tache
+// Modification d'une tâche
 router.patch('/:id/tasks/:taskId', async (req, res) => {
     try {
-        await Task.update({ name: req.body.name }, { where: { id: req.params.taskId } });
-        res.redirect(`/lists/${req.params.id}`);
+        await Task.update({ title: req.body.title, date: req.body.date }, { where: { id: req.params.taskId } });
+        res.redirect(`/${req.params.id}`);
     }
     catch (err) {
         console.error(err);
@@ -134,35 +139,11 @@ router.patch('/:id/tasks/:taskId', async (req, res) => {
 router.delete('/:id/tasks/:taskId', async (req, res) => {
     try {
         await Task.destroy({ where: { id: req.params.taskId } });
-        res.redirect(`/lists/${req.params.id}`);
+        res.redirect(`/${req.params.id}`);
     }
     catch (err) {
         console.error(err);
         res.status(500).send('Erreur lors de la suppression de la tâche');
-    }
-});
-
-//Tache complete
-router.patch('/:id/tasks/:taskId/complete', async (req, res) => {
-    try {
-        await Task.update({ completed: true }, { where: { id: req.params.taskId } });
-        res.redirect(`/lists/${req.params.id}`);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur lors de la modification de la tâche');
-    }
-});
-
-//Tache incomplete
-router.patch('/:id/tasks/:taskId/incomplete', async (req, res) => {
-    try {
-        await Task.update({ completed: false }, { where: { id: req.params.taskId } });
-        res.redirect(`/lists/${req.params.id}`);
-    }
-    catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur lors de la modification de la tâche');
     }
 });
 

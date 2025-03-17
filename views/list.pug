@@ -1,0 +1,86 @@
+extends layout
+
+block content
+  ul#task-list
+    each task in tasks
+      li
+        input(type='checkbox', checked=task.completed)
+        span(class=task.completed ? 'completed' : '')= task.title
+        span(class='date') (#{new Date(task.date).toLocaleDateString()})
+        i(onclick=`updateTask(${JSON.stringify(task)})`)
+          .bi.bi-pencil-square.btn
+        i(onclick=`deleteTask(${task.id}, ${list.id})`)
+          .bi.bi-trash3.btn
+  h2 Ajouter une nouvelle tâche
+  form(action=`/${list.id}/tasks` method='POST')
+    label(for='title') Titre :
+    input(type='text' id='title' name='title' required)
+    label(for='date') Date :
+    input(type='date' id='date' name='date')
+    button(type='submit') Ajouter
+
+  h2 Ajouter un utilisateur à la liste
+  form(action=`/${list.id}/users` method='POST')
+    label(for='email') Email de l'utilisateur :
+    input(type='email' id='email' name='email' required)
+    button(type='submit') Ajouter l'utilisateur
+
+  // Modal for renaming task
+  div#renameModal(style='display:none;')
+    div.modal-content
+      span.close(&times;)
+      h2 Renommer la tâche
+      form#renameForm
+        label(for='newTitle') Nouveau titre :
+        input(type='text' id='newTitle' name='newTitle' required)
+        br
+        label(for='newDate') Nouvelle date (YYYY-MM-DD) :
+        input(type='date' id='newDate' name='newDate')
+        br
+        button(type='button' onclick=`saveTaskChanges(${list.id})`) Enregistrer
+
+  script.
+    let currentTask;
+    function updateTask(task) {
+      currentTask = task.id;
+      document.getElementById('newTitle').value = task.title || '';
+      document.getElementById('newDate').value = task.date ? new Date(task.date).toISOString().split('T')[0] : '';
+      document.getElementById('renameModal').style.display = 'block';
+    }
+
+    function saveTaskChanges(listId) {
+      const newTitle = document.getElementById('newTitle').value;
+      const newDate = document.getElementById('newDate').value;
+      console.log(newDate);
+      fetch(`/${listId}/tasks/${currentTask}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle, date: newDate }),
+      }).then(() => {
+        location.reload();
+        document.getElementById('renameModal').style.display = 'none';
+      });
+    }
+
+    function deleteTask(taskId, listId) {
+      if (confirm('Voulez-vous vraiment supprimer cette tâche ?')) {
+        fetch(`/${listId}/tasks/${taskId}`, {
+          method: 'DELETE',
+        }).then(() => location.reload());
+      }
+    }
+
+    // Close the modal when clicking the close button
+    document.querySelector('.close').onclick = function() {
+      document.getElementById('renameModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('renameModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
